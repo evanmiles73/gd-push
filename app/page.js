@@ -2,7 +2,25 @@
 import {useEffect,useMemo,useState} from "react";
 const brands=["旅人日和","小拾光接送","迷旅台灣","拾光漫遊－假日旅行"];
 const platforms=["Facebook","Instagram","Threads","小紅書"];
-const seed={Facebook:"溫暖實用",Instagram:"短句＋Hashtag",Threads:"聊天互動",小紅書:"生活感種草"};\nconst copyFor=(p,b,t)=>({Facebook:`🌼 ${b}\\n\\n${t}\\n\\n把交通安排好，旅程就能少一點忙亂、多一點安心。\\n\\n歡迎私訊詢問與預約。`,Instagram:`${t} ✨\\n\\n把出發前的大小事安排好，輕鬆出發。🌼\\n\\n#${b.replaceAll(" ","")} #台灣旅行 #機場接送 #包車旅遊`,Threads:`最近有人也在安排「${t}」嗎？\\n\\n我們最在意的不是趕路，是讓整段移動舒服一點。🌼\\n有問題可以直接來聊聊。`,小紅書:`台灣旅行｜${t} 🌼\\n\\n出發前最怕交通安排一團亂。這次把重點整理好了：提前確認時間、行李和上下車地點，整趟真的輕鬆很多。\\n\\n📍${b}\\n#台灣旅行 #自由行 #旅行攻略`}[p]||t);
+const seed={Facebook:"溫暖實用",Instagram:"短句＋Hashtag",Threads:"聊天互動",小紅書:"生活感種草"};\nconst copyFor=(p,b,t)=>({Facebook:`🌼 ${b}
+
+${t}
+
+把交通安排好，旅程就能少一點忙亂、多一點安心。
+
+歡迎私訊詢問與預約。`,Instagram:`${t} ✨
+
+把出發前的大小事安排好，輕鬆出發。🌼
+
+#${b.replaceAll(" ","")} #台灣旅行 #機場接送 #包車旅遊`,Threads:`最近有人也在安排「${t}」嗎？
+
+我們最在意的不是趕路，是讓整段移動舒服一點。🌼
+有問題可以直接來聊聊。`,小紅書:`台灣旅行｜${t} 🌼
+
+出發前最怕交通安排一團亂。這次把重點整理好了：提前確認時間、行李和上下車地點，整趟真的輕鬆很多。
+
+📍${b}
+#台灣旅行 #自由行 #旅行攻略`}[p]||t);
 export default function Home(){
  const[brand,setBrand]=useState(brands[0]),[topic,setTopic]=useState(""),[tab,setTab]=useState("home");
  const[selected,setSelected]=useState(platforms),[drafts,setDrafts]=useState([]);\n const[enabledPlatforms,setEnabledPlatforms]=useState(platforms),[defaultBrand,setDefaultBrand]=useState(brands[0]);\n const[schedules,setSchedules]=useState([]),[scheduleDraft,setScheduleDraft]=useState(null);\n const[media,setMedia]=useState([]),[mediaName,setMediaName]=useState(""),[mediaNote,setMediaNote]=useState("");\n const[published,setPublished]=useState([]);\n const[preview,setPreview]=useState(null);\n const[ready,setReady]=useState(false);\n useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem("gd-push-data")||"{}");if(saved.brand)setBrand(saved.brand);if(saved.defaultBrand)setDefaultBrand(saved.defaultBrand);if(Array.isArray(saved.enabledPlatforms))setEnabledPlatforms(saved.enabledPlatforms);if(Array.isArray(saved.drafts))setDrafts(saved.drafts);if(Array.isArray(saved.schedules))setSchedules(saved.schedules);if(Array.isArray(saved.media))setMedia(saved.media);if(Array.isArray(saved.published))setPublished(saved.published)}catch{}finally{setReady(true)}},[]);\n useEffect(()=>{if(!ready)return;localStorage.setItem("gd-push-data",JSON.stringify({brand,defaultBrand,enabledPlatforms,drafts,schedules,media,published}))},[ready,brand,defaultBrand,enabledPlatforms,drafts,schedules,media,published]);
