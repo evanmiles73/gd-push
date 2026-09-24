@@ -1,11 +1,11 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useEffect,useMemo,useState} from "react";
 const brands=["旅人日和","小拾光接送","迷旅台灣","拾光漫遊－假日旅行"];
 const platforms=["Facebook","Instagram","Threads","小紅書"];
 const seed={Facebook:"溫暖實用",Instagram:"短句＋Hashtag",Threads:"聊天互動",小紅書:"生活感種草"};
 export default function Home(){
  const[brand,setBrand]=useState(brands[0]),[topic,setTopic]=useState(""),[tab,setTab]=useState("home");
- const[selected,setSelected]=useState(platforms),[drafts,setDrafts]=useState([]);\n const[schedules,setSchedules]=useState([]),[scheduleDraft,setScheduleDraft]=useState(null);\n const[media,setMedia]=useState([]),[mediaName,setMediaName]=useState(""),[mediaNote,setMediaNote]=useState("");
+ const[selected,setSelected]=useState(platforms),[drafts,setDrafts]=useState([]);\n const[schedules,setSchedules]=useState([]),[scheduleDraft,setScheduleDraft]=useState(null);\n const[media,setMedia]=useState([]),[mediaName,setMediaName]=useState(""),[mediaNote,setMediaNote]=useState("");\n const[ready,setReady]=useState(false);\n useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem("gd-push-data")||"{}");if(saved.brand)setBrand(saved.brand);if(Array.isArray(saved.drafts))setDrafts(saved.drafts);if(Array.isArray(saved.schedules))setSchedules(saved.schedules);if(Array.isArray(saved.media))setMedia(saved.media)}catch{}finally{setReady(true)}},[]);\n useEffect(()=>{if(!ready)return;localStorage.setItem("gd-push-data",JSON.stringify({brand,drafts,schedules,media}))},[ready,brand,drafts,schedules,media]);
  const toggle=x=>setSelected(v=>v.includes(x)?v.filter(i=>i!==x):[...v,x]);
  const create=()=>{if(!topic.trim())return;setDrafts(selected.map((p,i)=>({id:Date.now()+i,platform:p,brand,topic:topic.trim(),style:seed[p],status:"待確認"})));setTab("drafts")};
  const plan=d=>{const now=new Date();const local=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);setScheduleDraft({...d,when:local});setTab("schedule")};\n const savePlan=()=>{if(!scheduleDraft?.when)return;setSchedules(v=>[...v.filter(x=>x.id!==scheduleDraft.id),{...scheduleDraft,status:"已排程"}]);setDrafts(v=>v.map(x=>x.id===scheduleDraft.id?{...x,status:"已排程"}:x));setScheduleDraft(null)};\n const addMedia=()=>{if(!mediaName.trim())return;setMedia(v=>[{id:Date.now(),name:mediaName.trim(),note:mediaNote.trim(),brand,created:new Date().toLocaleDateString("zh-TW")},...v]);setMediaName("");setMediaNote("")};\n const title=useMemo(()=>({drafts:"待發布",schedule:"排程中心",media:"素材庫",stats:"成效分析",settings:"設定"}[tab]||""),[tab]);
